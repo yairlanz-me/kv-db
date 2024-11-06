@@ -5,12 +5,12 @@ const app = new Hono()
 app.use (cors())
 
 const kv = await Deno.openKv();
-const DB_URL = Deno.env.get("DB_URL")
+const DB_KEY = Deno.env.get("DB_KEY")
 
 app.get("/", (c) => {return c.text("Hello")})
 
 // ------------------- BUKET -------------------
-app.get(`/${DB_URL}/:buket`, async (c) => {
+app.get(`/${DB_KEY}/:buket`, async (c) => {
   const ar=[], kvVal=[];
   const buket = c.req.param('buket')
   const entries = kv.list({prefix:[`${buket}`]})
@@ -20,7 +20,7 @@ app.get(`/${DB_URL}/:buket`, async (c) => {
   return c.text(kvVal.join(''))
 })
 
-app.post(`/${DB_URL}/:buket`, async (c) => {
+app.post(`/${DB_KEY}/:buket`, async (c) => {
   const buket = c.req.param('buket')
   const payload = await c.req.text()
   const entries = kv.list({prefix:[`${buket}`]});
@@ -31,7 +31,7 @@ app.post(`/${DB_URL}/:buket`, async (c) => {
   return c.text('ok')
 })
 
-app.delete(`/${DB_URL}/:buket`, async (c) => {
+app.delete(`/${DB_KEY}/:buket`, async (c) => {
   const buket = c.req.param('buket')
   const entries = kv.list({prefix:[`${buket}`]})
   for await (const entry of entries)
