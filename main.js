@@ -5,7 +5,7 @@ const app = new Hono()
 app.use (cors())
 
 const kv = await Deno.openKv();
-const DB_KEY = Deno.env.get("DB_KEY")
+const DB_KEY = Deno.env.get("DB_URL")
 
 app.get("/", (c) => {return c.text("Hello")})
 
